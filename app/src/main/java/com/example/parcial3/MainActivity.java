@@ -2,7 +2,7 @@ package com.example.parcial3;
 
 import android.os.Bundle;
 
-import com.example.parcial3.ble.BleUtils;
+import com.example.parcial3.ble.BleManager;
 import com.example.parcial3.logs.Logger;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+    BleManager bleManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        instantiateBleManager();
         detectIfBleIsSupported();
     }
 
@@ -56,9 +58,13 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void instantiateBleManager(){
+        bleManager = new BleManager(this);
+    }
+
     private void detectIfBleIsSupported(){
-        boolean bleIsSupported = BleUtils.CheckIfBLEIsSupportedOrNot(this);
-        if (!bleIsSupported){
+        boolean bleIsSupported = bleManager.checkIfBLEIsSupportedOrNot();
+        if (bleIsSupported){
             handleBleSupported();
         } else {
             handleBleNotSupported();
