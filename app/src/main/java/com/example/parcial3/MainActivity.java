@@ -2,6 +2,7 @@ package com.example.parcial3;
 
 import android.os.Bundle;
 
+import com.example.parcial3.adapters.BluetoothDeviceListAdapter;
 import com.example.parcial3.ble.BleManager;
 import com.example.parcial3.ble.BleManagerCallerInterface;
 import com.example.parcial3.logs.Logger;
@@ -16,7 +17,8 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity implements BleManagerCallerInterface {
-    BleManager bleManager;
+    public BleManager bleManager;
+    private MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 bleManager.scanDevices();
             }
         });
+        mainActivity = this;
         instantiateBleManager();
         detectIfBleIsSupported();
         detectIfBluetoothIsEnabled();
@@ -104,6 +107,18 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
 
     @Override
     public void newDeviceDetected() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            try{
+                ListView listView=(ListView)findViewById(R.id.devices_list_id);
+                BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(), bleManager.scanResults, mainActivity);
+                listView.setAdapter(adapter);
 
+            }catch (Exception error){
+
+            }
+            }
+        });
     }
 }
