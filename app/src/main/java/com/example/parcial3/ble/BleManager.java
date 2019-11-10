@@ -46,15 +46,6 @@ public class BleManager {
         return false;
     }
 
-    public boolean isBluetoothOn(){
-        try{
-            return bluetoothManager.getAdapter().isEnabled();
-        }catch (Exception error){
-
-        }
-        return false;
-    }
-
     public boolean requestBluetoothDeviceEnable(final Activity activity){
         try{
             if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
