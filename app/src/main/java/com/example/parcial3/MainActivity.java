@@ -2,6 +2,8 @@ package com.example.parcial3;
 
 import android.os.Bundle;
 
+import com.example.parcial3.ble.BleUtils;
+import com.example.parcial3.logs.Logger;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        detectIfBleIsSupported();
     }
 
     @Override
@@ -51,5 +54,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void detectIfBleIsSupported(){
+        boolean bleIsSupported = BleUtils.CheckIfBLEIsSupportedOrNot(this);
+        if (!bleIsSupported){
+            handleBleSupported();
+        } else {
+            handleBleNotSupported();
+        }
+    }
+
+    private void handleBleSupported(){
+        Logger.shortToast(this, "Su dispositivo SI soporta BLE");
+    }
+
+    private void handleBleNotSupported(){
+        Logger.shortToast(this, "Su dispositivo NO soporta BLE");
     }
 }
