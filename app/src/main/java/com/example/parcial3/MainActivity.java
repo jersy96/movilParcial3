@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         });
         instantiateBleManager();
         detectIfBleIsSupported();
+        detectIfBluetoothIsEnabled();
     }
 
     @Override
@@ -77,5 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleBleNotSupported(){
         Logger.shortToast(this, "Su dispositivo NO soporta BLE");
+    }
+
+    private void detectIfBluetoothIsEnabled(){
+        bleManager.requestBluetoothDeviceEnable(this);
     }
 }
