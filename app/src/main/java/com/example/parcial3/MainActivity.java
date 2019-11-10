@@ -112,12 +112,22 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             public void run() {
             try{
                 ListView listView=(ListView)findViewById(R.id.devices_list_id);
-                BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(), bleManager.scanResults, mainActivity);
+                BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(), bleManager, mainActivity);
                 listView.setAdapter(adapter);
 
             }catch (Exception error){
 
             }
+            }
+        });
+    }
+
+    @Override
+    public void connectedToGattServer() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Logger.shortToast(getApplicationContext(), "conectado");
             }
         });
     }

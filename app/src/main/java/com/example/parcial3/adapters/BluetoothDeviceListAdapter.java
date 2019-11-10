@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.example.parcial3.MainActivity;
 import com.example.parcial3.R;
+import com.example.parcial3.ble.BleManager;
 
 import java.util.List;
 
@@ -20,12 +21,14 @@ public class BluetoothDeviceListAdapter extends ArrayAdapter<ScanResult> {
     private final Context context;
     private MainActivity mainActivity;
     private List<ScanResult> scanResultList;
+    private final BleManager bleManager;
 
-    public BluetoothDeviceListAdapter(@NonNull Context context, List<ScanResult> scanResultList, MainActivity mainActivity) {
-        super(context, R.layout.device_list_item,scanResultList);
+    public BluetoothDeviceListAdapter(@NonNull Context context, BleManager bleManager, MainActivity mainActivity) {
+        super(context, R.layout.device_list_item, bleManager.scanResults);
         this.context = context;
         this.mainActivity=mainActivity;
-        this.scanResultList = scanResultList;
+        this.bleManager = bleManager;
+        this.scanResultList = bleManager.scanResults;
     }
 
     @Override
@@ -42,6 +45,15 @@ public class BluetoothDeviceListAdapter extends ArrayAdapter<ScanResult> {
 
         int deviceRssi = scanResultList.get(position).getRssi();
         setTextToTextView(rowView, R.id.device_list_item_text_view3, deviceRssi+" dBm");
+
+        ((TextView)rowView.findViewById(R.id.device_list_item_text_view)).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String address=((TextView) view.findViewById(R.id.device_list_item_text_view)).getText()+"";
+                bleManager.connectToGattServer(address);
+                return true;
+            }
+        });
 
         return rowView;
     }

@@ -6,5 +6,6 @@ public interface BleManagerCallerInterface {
     void scanStoped();
     void scanFailed(int error);
     void newDeviceDetected();
+    void connectedToGattServer();
 
 }
