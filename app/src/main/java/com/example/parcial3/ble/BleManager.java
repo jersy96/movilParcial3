@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattDescriptor;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -32,6 +33,7 @@ public class BleManager extends ScanCallback {
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothLeScanner bluetoothLeScanner;
     public List<ScanResult> scanResults;
+    public ArrayList<BluetoothGattService> services;
     BleManagerCallerInterface caller;
 
     public BleManager(Context context, BleManagerCallerInterface caller) {
@@ -214,7 +216,8 @@ public class BleManager extends ScanCallback {
                 @Override
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
-
+                    services = (ArrayList)gatt.getServices();
+                    caller.servicesDiscovered();
                 }
 
                 @Override

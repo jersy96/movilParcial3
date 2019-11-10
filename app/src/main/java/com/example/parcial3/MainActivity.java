@@ -131,4 +131,14 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             }
         });
     }
+
+    @Override
+    public void servicesDiscovered() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Logger.shortToast(getApplicationContext(), bleManager.services.size()+" servicios descubiertos");
+            }
+        });
+    }
 }
