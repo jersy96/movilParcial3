@@ -140,11 +140,8 @@ public class BleManager extends ScanCallback {
 
     @Override
     public void onScanResult(int callbackType, ScanResult result) {
-        if(!isResultAlreadyAtList(result)) {
-            scanResults.add(result);
-        }
+        processNewScanResult(result);
         caller.newDeviceDetected();
-
     }
 
     @Override
@@ -157,23 +154,33 @@ public class BleManager extends ScanCallback {
         caller.scanFailed(errorCode);
     }
 
-    public boolean isResultAlreadyAtList(ScanResult newResult){
-        for (ScanResult current : scanResults){
-            if(current.getDevice().getAddress().equals(newResult.getDevice().getAddress())){
-                return true;
+    private void processNewScanResult(ScanResult newScanResult){
+        String newAddress = newScanResult.getDevice().getAddress();
+        int pos = getPositionByAddress(newAddress);
+        if (pos == -1){
+            scanResults.add(newScanResult);
+        } else {
+            scanResults.set(pos, newScanResult);
+        }
+    }
+
+    public int getPositionByAddress(String targetAddress){
+        for (int i=0; i < scanResults.size(); i++){
+            ScanResult  current = scanResults.get(i);
+            if(current.getDevice().getAddress().equals(targetAddress)){
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     public BluetoothDevice getByAddress(String targetAddress){
-        for(ScanResult current : scanResults){
-            if(current!=null){
-                if(current.getDevice().getAddress().equals(targetAddress)){
-                    return current.getDevice();
-                }
-            }
+        int pos = getPositionByAddress(targetAddress);
+        if(pos == -1){
+            return null;
+        } else {
+          return scanResults.get(pos).getDevice();
         }
-        return null;
+
     }
 }
