@@ -3,9 +3,9 @@ package com.example.parcial3;
 import android.os.Bundle;
 
 import com.example.parcial3.ble.BleManager;
+import com.example.parcial3.ble.BleManagerCallerInterface;
 import com.example.parcial3.logs.Logger;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,8 +13,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BleManagerCallerInterface {
     BleManager bleManager;
 
     @Override
@@ -28,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                bleManager.scanDevices();
             }
         });
         instantiateBleManager();
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void instantiateBleManager(){
-        bleManager = new BleManager(this);
+        bleManager = new BleManager(this, this);
     }
 
     private void detectIfBleIsSupported(){
@@ -81,6 +81,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void detectIfBluetoothIsEnabled(){
-        bleManager.requestBluetoothDeviceEnable(this);
+        if(!bleManager.isBluetoothOn()){
+            bleManager.enableBluetoothDevice(this, 1001);
+        }
+        bleManager.requestLocationPermissions(this,1002);
+    }
+
+    @Override
+    public void scanStartedSuccessfully() {
+
+    }
+
+    @Override
+    public void scanStoped() {
+
+    }
+
+    @Override
+    public void scanFailed(int error) {
+
+    }
+
+    @Override
+    public void newDeviceDetected() {
+
     }
 }
