@@ -179,6 +179,26 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         });
     }
 
+    @Override
+    public void onCharacteristicRead(final BluetoothGattCharacteristic characteristic) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Logger.shortToast(getApplicationContext(), "characteristic read"+characteristic.getUuid().toString());
+            }
+        });
+    }
+
+    @Override
+    public void onCharacteristicWrite(final BluetoothGattCharacteristic characteristic) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Logger.shortToast(getApplicationContext(), "characteristic write"+characteristic.getUuid().toString());
+            }
+        });
+    }
+
     private void setDevicesAdapter(){
         currentAdapter = DEVICES_ADAPTER;
         runOnUiThread(new Runnable() {

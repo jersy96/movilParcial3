@@ -11,5 +11,7 @@ public interface BleManagerCallerInterface {
     void connectedToGattServer();
     void servicesDiscovered();
     void onCharacteristicChanged(BluetoothGattCharacteristic characteristic);
+    void onCharacteristicRead(BluetoothGattCharacteristic characteristic);
+    void onCharacteristicWrite(BluetoothGattCharacteristic characteristic);
 
 }

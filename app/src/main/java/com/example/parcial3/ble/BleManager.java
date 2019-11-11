@@ -239,11 +239,13 @@ public class BleManager extends ScanCallback {
                 @Override
                 public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicRead(gatt, characteristic, status);
+                    caller.onCharacteristicRead(characteristic);
                 }
 
                 @Override
                 public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
                     super.onCharacteristicWrite(gatt, characteristic, status);
+                    caller.onCharacteristicWrite(characteristic);
                 }
 
                 @Override
