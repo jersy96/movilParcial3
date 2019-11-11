@@ -145,6 +145,12 @@ public class BleManager extends ScanCallback {
         }
     }
 
+    public void stopScan(){
+        this.scanResults.clear();
+        this.services.clear();
+        bluetoothLeScanner.stopScan(this);
+    }
+
     @Override
     public void onScanResult(int callbackType, ScanResult result) {
         processNewScanResult(result);

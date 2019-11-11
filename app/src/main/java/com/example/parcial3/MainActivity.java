@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
     public BleManager bleManager;
     private MainActivity mainActivity;
     private int currentAdapter;
+    private boolean scanning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        scanning = false;
         currentAdapter = DEVICES_ADAPTER;
         mainActivity = this;
         instantiateBleManager();
@@ -52,9 +54,22 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
 
         //noinspection SimplifiableIfStatement
         switch (id){
+            case R.id.action_start_scan:
+                if (!scanning){
+                    bleManager.scanDevices();
+                    scanning = true;
+                    setDevicesAdapter();
+                } else {
+                    Logger.shortToast(this, "Ya estas escaneando");
+                }
+                return true;
+            case R.id.action_stop_scan:
+                scanning = false;
+                bleManager.stopScan();
+                setDevicesAdapter();
+                return true;
             case R.id.action_show_devices:
                 setDevicesAdapter();
-                bleManager.scanDevices();
                 return true;
             case R.id.action_show_services:
                 setServicesAdapter();
@@ -158,5 +173,16 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 listView.setAdapter(adapter);
             }
         });
+    }
+
+    private void showCurrentAdapter(){
+        switch (currentAdapter){
+            case DEVICES_ADAPTER:
+                setDevicesAdapter();
+                break;
+            case SERVICES_ADAPTER:
+                setServicesAdapter();
+                break;
+        }
     }
 }
