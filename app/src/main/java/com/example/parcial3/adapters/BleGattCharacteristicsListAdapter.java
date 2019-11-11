@@ -2,6 +2,7 @@ package com.example.parcial3.adapters;
 
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +39,13 @@ public class BleGattCharacteristicsListAdapter extends ArrayAdapter<BluetoothGat
         View rowView= inflater.inflate(R.layout.characteristic_list_item, null, true);
 
         BluetoothGattCharacteristic characteristic = characteristics.get(position);
+        boolean colored = isCharacteristicLastOne(characteristic);
 
         String properties = getCharacteristicProperties(characteristic);
-        setTextToTextView(rowView, R.id.characteristic_list_item_text_view, properties);
+        setTextToTextView(rowView, R.id.characteristic_list_item_text_view, properties, colored);
 
         String characteristicUuid = characteristic.getUuid().toString();
-        setTextToTextView(rowView, R.id.characteristic_list_item_text_view2, characteristicUuid);
+        setTextToTextView(rowView, R.id.characteristic_list_item_text_view2, characteristicUuid, colored);
 
         setOnLongClickListenerToTextView(rowView, R.id.characteristic_list_item_text_view);
         setOnLongClickListenerToTextView(rowView, R.id.characteristic_list_item_text_view2);
@@ -51,9 +53,12 @@ public class BleGattCharacteristicsListAdapter extends ArrayAdapter<BluetoothGat
         return rowView;
     }
 
-    private void setTextToTextView(View rowView, int textViewId, String text){
+    private void setTextToTextView(View rowView, int textViewId, String text, boolean colored){
         TextView txtView = rowView.findViewById(textViewId);
         txtView.setText(text);
+        if (colored){
+            txtView.setTextColor(Color.RED);
+        }
     }
 
     private void setOnLongClickListenerToTextView(View rowView, int textViewId){
@@ -97,5 +102,9 @@ public class BleGattCharacteristicsListAdapter extends ArrayAdapter<BluetoothGat
         }else{
             return properties;
         }
+    }
+
+    private boolean isCharacteristicLastOne(BluetoothGattCharacteristic characteristic){
+        return  bleManager.lastCharacteristic.getUuid().toString().equals(characteristic.getUuid().toString());
     }
 }
