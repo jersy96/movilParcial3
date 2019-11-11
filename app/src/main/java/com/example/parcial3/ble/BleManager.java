@@ -27,6 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BleManager extends ScanCallback {
+    public static final int CHARACTERISTIC_OPERATION_UNAVAILABLE = 0;
+    public static final int CHARACTERISTIC_OPERATION_START = 1;
+    public static final int CHARACTERISTIC_OPERATION_NULL = 2;
+
     Context context;
 
     BluetoothManager bluetoothManager;
@@ -383,21 +387,29 @@ public class BleManager extends ScanCallback {
         return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_BROADCAST) != 0);
     }
 
-    public boolean readLastCharacteristic(){
+    public int readLastCharacteristic(){
         if(lastCharacteristic == null){
-            return false;
+            return CHARACTERISTIC_OPERATION_NULL;
         } else {
-            readCharacteristic(lastGatt, lastCharacteristic);
-            return true;
+            if (isCharacteristicReadable(lastCharacteristic)){
+                readCharacteristic(lastGatt, lastCharacteristic);
+                return CHARACTERISTIC_OPERATION_START;
+            } else {
+                return CHARACTERISTIC_OPERATION_UNAVAILABLE;
+            }
         }
     }
 
-    public boolean writeLastCharacteristic(byte[] data){
+    public int writeLastCharacteristic(byte[] data){
         if(lastCharacteristic == null){
-            return false;
+            return CHARACTERISTIC_OPERATION_NULL;
         } else {
-            writeCharacteristic(lastGatt, lastCharacteristic, data);
-            return true;
+            if(isCharacteristicWriteable(lastCharacteristic)){
+                writeCharacteristic(lastGatt, lastCharacteristic, data);
+                return CHARACTERISTIC_OPERATION_START;
+            } else {
+                return CHARACTERISTIC_OPERATION_UNAVAILABLE;
+            }
         }
     }
 

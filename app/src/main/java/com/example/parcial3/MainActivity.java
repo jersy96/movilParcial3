@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Logger.shortToast(getApplicationContext(), "characteristic changed"+characteristic.getUuid().toString());
+                Logger.shortToast(getApplicationContext(), "characteristic changed "+characteristic.getUuid().toString());
             }
         });
     }
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Logger.shortToast(getApplicationContext(), "characteristic read"+characteristic.getUuid().toString());
+                Logger.shortToast(getApplicationContext(), "characteristic read "+characteristic.getUuid().toString());
             }
         });
     }
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Logger.shortToast(getApplicationContext(), "characteristic write"+characteristic.getUuid().toString());
+                Logger.shortToast(getApplicationContext(), "characteristic write "+characteristic.getUuid().toString());
             }
         });
     }
@@ -270,15 +270,27 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
     }
 
     private void readLastCharacteristic(){
-        if (!bleManager.readLastCharacteristic()){
-            Logger.shortToast(this, "characteristic not set");
+        int result = bleManager.readLastCharacteristic();
+        switch (result){
+            case BleManager.CHARACTERISTIC_OPERATION_NULL:
+                Logger.shortToast(this, "characteristic not set");
+                break;
+            case BleManager.CHARACTERISTIC_OPERATION_UNAVAILABLE:
+                Logger.shortToast(this, "characteristic not readable");
+                break;
         }
     }
 
     private void writeLastCharacteristic(){
         byte[] data = "hola".getBytes();
-        if (!bleManager.writeLastCharacteristic(data)){
-            Logger.shortToast(this, "characteristic not set");
+        int result = bleManager.writeLastCharacteristic(data);
+        switch (result){
+            case BleManager.CHARACTERISTIC_OPERATION_NULL:
+                Logger.shortToast(this, "characteristic not set");
+                break;
+            case BleManager.CHARACTERISTIC_OPERATION_UNAVAILABLE:
+                Logger.shortToast(this, "characteristic not writable");
+                break;
         }
     }
 }
