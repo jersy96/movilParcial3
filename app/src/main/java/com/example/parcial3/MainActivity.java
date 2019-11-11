@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity implements BleManagerCallerInterface {
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
     private int currentAdapter;
     private boolean scanning;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         scanning = false;
         currentAdapter = DEVICES_ADAPTER;
         mainActivity = this;
+        findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.openOptionsMenu();
+            }
+        });
         instantiateBleManager();
         detectIfBleIsSupported();
         detectIfBluetoothIsEnabled();
