@@ -311,6 +311,7 @@ public class BleManager extends ScanCallback {
     }
 
     public void setCharacteristics(String serviceUuid){
+        lastCharacteristic = null;
         BluetoothGattService service = getServiceByUuid(serviceUuid);
         characteristics = (ArrayList) service.getCharacteristics();
     }

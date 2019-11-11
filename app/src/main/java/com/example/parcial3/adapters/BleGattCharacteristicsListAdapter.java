@@ -41,14 +41,18 @@ public class BleGattCharacteristicsListAdapter extends ArrayAdapter<BluetoothGat
         BluetoothGattCharacteristic characteristic = characteristics.get(position);
         boolean colored = isCharacteristicLastOne(characteristic);
 
+        String name = "char "+(position+1);
+        setTextToTextView(rowView, R.id.characteristic_list_item_text_view, name, colored);
+
         String properties = getCharacteristicProperties(characteristic);
-        setTextToTextView(rowView, R.id.characteristic_list_item_text_view, properties, colored);
+        setTextToTextView(rowView, R.id.characteristic_list_item_text_view2, properties, colored);
 
         String characteristicUuid = characteristic.getUuid().toString();
-        setTextToTextView(rowView, R.id.characteristic_list_item_text_view2, characteristicUuid, colored);
+        setTextToTextView(rowView, R.id.characteristic_list_item_text_view3, characteristicUuid, colored);
 
         setOnLongClickListenerToTextView(rowView, R.id.characteristic_list_item_text_view);
         setOnLongClickListenerToTextView(rowView, R.id.characteristic_list_item_text_view2);
+        setOnLongClickListenerToTextView(rowView, R.id.characteristic_list_item_text_view3);
 
         return rowView;
     }
@@ -69,7 +73,7 @@ public class BleGattCharacteristicsListAdapter extends ArrayAdapter<BluetoothGat
         return new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                String characteristicUuid = ((TextView) ((View)view.getParent()).findViewById(R.id.characteristic_list_item_text_view2)).getText()+"";
+                String characteristicUuid = ((TextView) ((View)view.getParent()).findViewById(R.id.characteristic_list_item_text_view3)).getText()+"";
                 bleManager.setDescriptors(characteristicUuid);
                 mainActivity.setDescriptorsAdapter();
                 return true;

@@ -92,8 +92,10 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 return true;
             case R.id.action_show_descriptors:
                 setDescriptorsAdapter();
+                return true;
             case R.id.action_read_last_characteristic:
                 readLastCharacteristic();
+                return true;
             case R.id.action_write_last_characteristic:
                 writeLastCharacteristic();
                 return true;
@@ -174,7 +176,8 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Logger.shortToast(getApplicationContext(), "characteristic changed "+characteristic.getUuid().toString());
+                int pos = bleManager.getCharacteristicPositionByUuid(characteristic.getUuid().toString());
+                Logger.shortToast(getApplicationContext(), "characteristic changed "+(pos+1));
             }
         });
     }
@@ -184,7 +187,8 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Logger.shortToast(getApplicationContext(), "characteristic read "+characteristic.getUuid().toString());
+                int pos = bleManager.getCharacteristicPositionByUuid(characteristic.getUuid().toString());
+                Logger.shortToast(getApplicationContext(), "characteristic read "+(pos+1));
             }
         });
     }
@@ -194,7 +198,8 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Logger.shortToast(getApplicationContext(), "characteristic write "+characteristic.getUuid().toString());
+                int pos = bleManager.getCharacteristicPositionByUuid(characteristic.getUuid().toString());
+                Logger.shortToast(getApplicationContext(), "characteristic write "+(pos+1));
             }
         });
     }
