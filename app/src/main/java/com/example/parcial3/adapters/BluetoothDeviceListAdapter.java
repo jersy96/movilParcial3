@@ -46,21 +46,31 @@ public class BluetoothDeviceListAdapter extends ArrayAdapter<ScanResult> {
         int deviceRssi = scanResultList.get(position).getRssi();
         setTextToTextView(rowView, R.id.device_list_item_text_view3, deviceRssi+" dBm");
 
-        ((TextView)rowView.findViewById(R.id.device_list_item_text_view)).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                String address=((TextView) view.findViewById(R.id.device_list_item_text_view)).getText()+"";
-                bleManager.connectToGattServer(address);
-                mainActivity.setServicesAdapter();
-                return true;
-            }
-        });
+        setOnLongClickListenerToTextView(rowView, R.id.device_list_item_text_view);
+        setOnLongClickListenerToTextView(rowView, R.id.device_list_item_text_view2);
+        setOnLongClickListenerToTextView(rowView, R.id.device_list_item_text_view3);
 
         return rowView;
     }
 
     private void setTextToTextView(View rowView, int textViewId, String text){
-        TextView txtView = (TextView) rowView.findViewById(textViewId);
+        TextView txtView = rowView.findViewById(textViewId);
         txtView.setText(text);
+    }
+
+    private void setOnLongClickListenerToTextView(View rowView, int textViewId){
+        rowView.findViewById(textViewId).setOnLongClickListener(getOnLongClickListener());
+    }
+
+    private View.OnLongClickListener getOnLongClickListener(){
+        return new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String address=((TextView) ((View)view.getParent()).findViewById(R.id.device_list_item_text_view)).getText()+"";
+                bleManager.connectToGattServer(address);
+                mainActivity.setServicesAdapter();
+                return true;
+            }
+        };
     }
 }
