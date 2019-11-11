@@ -228,6 +228,7 @@ public class BleManager extends ScanCallback {
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
                     services = (ArrayList)gatt.getServices();
+                    searchAndSetAllNotifyAbleCharacteristics(gatt);
                     caller.servicesDiscovered();
                 }
 
@@ -324,5 +325,51 @@ public class BleManager extends ScanCallback {
     public void setDescriptors(String characteristicUuid){
         BluetoothGattCharacteristic characteristic = getCharacteristicByUuid(characteristicUuid);
         descriptors = (ArrayList) characteristic.getDescriptors();
+    }
+
+    private void searchAndSetAllNotifyAbleCharacteristics(BluetoothGatt gatt) {
+        for(BluetoothGattService currentService: services){
+            for(BluetoothGattCharacteristic currentCharacteristic:currentService.getCharacteristics()){
+                enableNotifiableCharacteristic(gatt, currentCharacteristic);
+            }
+        }
+    }
+
+    private void enableNotifiableCharacteristic(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic){
+        if(isCharacteristicNotifiable(characteristic)){
+            gatt.setCharacteristicNotification(characteristic, true);
+            for(BluetoothGattDescriptor currentDescriptor:characteristic.getDescriptors()){
+                currentDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+                gatt.writeDescriptor(currentDescriptor);
+            }
+
+        }
+    }
+
+    public boolean isCharacteristicWriteable(BluetoothGattCharacteristic characteristic) {
+        return (characteristic.getProperties() &
+                (BluetoothGattCharacteristic.PROPERTY_WRITE
+                        | BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE
+                        | BluetoothGattCharacteristic.PROPERTY_SIGNED_WRITE)) != 0;
+    }
+
+    public boolean isCharacteristicReadable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_READ) != 0);
+    }
+
+    public boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0);
+    }
+
+    public boolean isCharacteristicIndicable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0);
+    }
+
+    public boolean isCharacteristicExtendable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_EXTENDED_PROPS) != 0);
+    }
+
+    public boolean isCharacteristicBroadcastable(BluetoothGattCharacteristic characteristic) {
+        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_BROADCAST) != 0);
     }
 }

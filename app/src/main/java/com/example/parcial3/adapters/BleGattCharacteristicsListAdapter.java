@@ -72,51 +72,24 @@ public class BleGattCharacteristicsListAdapter extends ArrayAdapter<BluetoothGat
         };
     }
 
-    private boolean isCharacteristicWriteable(BluetoothGattCharacteristic characteristic) {
-        return (characteristic.getProperties() &
-                (BluetoothGattCharacteristic.PROPERTY_WRITE
-                        | BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE
-                        | BluetoothGattCharacteristic.PROPERTY_SIGNED_WRITE)) != 0;
-    }
-
-    private boolean isCharacteristicReadable(BluetoothGattCharacteristic characteristic) {
-        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_READ) != 0);
-    }
-
-    private boolean isCharacteristicNotifiable(BluetoothGattCharacteristic characteristic) {
-        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_NOTIFY) != 0);
-    }
-
-    private boolean isCharacteristicIndicable(BluetoothGattCharacteristic characteristic) {
-        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_INDICATE) != 0);
-    }
-
-    private boolean isCharacteristicExtendable(BluetoothGattCharacteristic characteristic) {
-        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_EXTENDED_PROPS) != 0);
-    }
-
-    private boolean isCharacteristicBroadcastable(BluetoothGattCharacteristic characteristic) {
-        return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_BROADCAST) != 0);
-    }
-
     private String getCharacteristicProperties(BluetoothGattCharacteristic characteristic){
         String properties = "";
-        if(isCharacteristicWriteable(characteristic)){
+        if(bleManager.isCharacteristicWriteable(characteristic)){
             properties += "W";
         }
-        if(isCharacteristicReadable(characteristic)){
+        if(bleManager.isCharacteristicReadable(characteristic)){
             properties += "R";
         }
-        if(isCharacteristicNotifiable(characteristic)){
+        if(bleManager.isCharacteristicNotifiable(characteristic)){
             properties += "N";
         }
-        if(isCharacteristicIndicable(characteristic)){
+        if(bleManager.isCharacteristicIndicable(characteristic)){
             properties += "I";
         }
-        if(isCharacteristicExtendable(characteristic)){
+        if(bleManager.isCharacteristicExtendable(characteristic)){
             properties += "E";
         }
-        if(isCharacteristicBroadcastable(characteristic)){
+        if(bleManager.isCharacteristicBroadcastable(characteristic)){
             properties += "B";
         }
         if(properties.equals("")){
