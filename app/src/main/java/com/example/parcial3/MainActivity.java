@@ -2,6 +2,7 @@ package com.example.parcial3;
 
 import android.os.Bundle;
 
+import com.example.parcial3.adapters.BleGattServicesListAdapter;
 import com.example.parcial3.adapters.BluetoothDeviceListAdapter;
 import com.example.parcial3.ble.BleManager;
 import com.example.parcial3.ble.BleManagerCallerInterface;
@@ -137,7 +138,9 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Logger.shortToast(getApplicationContext(), bleManager.services.size()+" servicios descubiertos");
+                ListView listView=(ListView)findViewById(R.id.devices_list_id);
+                BleGattServicesListAdapter adapter=new BleGattServicesListAdapter(getApplicationContext(), bleManager, mainActivity);
+                listView.setAdapter(adapter);
             }
         });
     }
