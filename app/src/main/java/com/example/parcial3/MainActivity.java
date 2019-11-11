@@ -3,6 +3,7 @@ package com.example.parcial3;
 import android.os.Bundle;
 
 import com.example.parcial3.adapters.BleGattCharacteristicsListAdapter;
+import com.example.parcial3.adapters.BleGattDescriptorsListAdapter;
 import com.example.parcial3.adapters.BleGattServicesListAdapter;
 import com.example.parcial3.adapters.BluetoothDeviceListAdapter;
 import com.example.parcial3.ble.BleManager;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
     private final static int DEVICES_ADAPTER = 1;
     private final static int SERVICES_ADAPTER = 2;
     private final static int CHARACTERISTICS_ADAPTER = 3;
+    private final static int DESCRIPTORS_ADAPTER = 4;
 
     public BleManager bleManager;
     private MainActivity mainActivity;
@@ -86,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 return true;
             case R.id.action_show_characteristics:
                 setCharacteristicsAdapter();
+                return true;
+            case R.id.action_show_descriptors:
+                setDescriptorsAdapter();
                 return true;
         }
 
@@ -200,6 +205,18 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         });
     }
 
+    public void setDescriptorsAdapter(){
+        currentAdapter = DESCRIPTORS_ADAPTER;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ListView listView=findViewById(R.id.adapters_list_id);
+                BleGattDescriptorsListAdapter adapter=new BleGattDescriptorsListAdapter(getApplicationContext(), bleManager, mainActivity);
+                listView.setAdapter(adapter);
+            }
+        });
+    }
+
     private void showCurrentAdapter(){
         switch (currentAdapter){
             case DEVICES_ADAPTER:
@@ -210,6 +227,9 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 break;
             case CHARACTERISTICS_ADAPTER:
                 setCharacteristicsAdapter();
+                break;
+            case DESCRIPTORS_ADAPTER:
+                setDescriptorsAdapter();
                 break;
         }
     }

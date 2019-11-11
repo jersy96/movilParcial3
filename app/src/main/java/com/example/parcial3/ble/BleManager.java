@@ -35,6 +35,7 @@ public class BleManager extends ScanCallback {
     public List<ScanResult> scanResults;
     public ArrayList<BluetoothGattService> services;
     public ArrayList<BluetoothGattCharacteristic> characteristics;
+    public ArrayList<BluetoothGattDescriptor> descriptors;
     BleManagerCallerInterface caller;
 
     public BleManager(Context context, BleManagerCallerInterface caller) {
@@ -51,6 +52,7 @@ public class BleManager extends ScanCallback {
             scanResults = new ArrayList();
             services = new ArrayList();
             characteristics = new ArrayList();
+            descriptors = new ArrayList();
         }catch (Exception error){
 
         }
@@ -297,5 +299,30 @@ public class BleManager extends ScanCallback {
     public void setCharacteristics(String serviceUuid){
         BluetoothGattService service = getServiceByUuid(serviceUuid);
         characteristics = (ArrayList) service.getCharacteristics();
+    }
+
+    public int getCharacteristicPositionByUuid(String targetUuid){
+        for (int i=0; i < characteristics.size(); i++){
+            BluetoothGattCharacteristic current = characteristics.get(i);
+            if(current.getUuid().toString().equals(targetUuid)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public BluetoothGattCharacteristic getCharacteristicByUuid(String targetUuid){
+        int pos = getCharacteristicPositionByUuid(targetUuid);
+        if(pos == -1){
+            return null;
+        } else {
+            return characteristics.get(pos);
+        }
+
+    }
+
+    public void setDescriptors(String characteristicUuid){
+        BluetoothGattCharacteristic characteristic = getCharacteristicByUuid(characteristicUuid);
+        descriptors = (ArrayList) characteristic.getDescriptors();
     }
 }

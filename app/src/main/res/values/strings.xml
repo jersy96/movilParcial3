@@ -5,4 +5,5 @@
     <string name="action_show_devices">Show Devices</string>
     <string name="action_show_services">Show Services</string>
     <string name="action_show_characteristics">Show Characteristics</string>
+    <string name="action_show_descriptors">Show Descriptors</string>
 </resources>

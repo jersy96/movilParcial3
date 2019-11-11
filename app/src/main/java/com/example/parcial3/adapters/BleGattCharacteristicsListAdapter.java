@@ -65,6 +65,8 @@ public class BleGattCharacteristicsListAdapter extends ArrayAdapter<BluetoothGat
             @Override
             public boolean onLongClick(View view) {
                 String characteristicUuid = ((TextView) ((View)view.getParent()).findViewById(R.id.characteristic_list_item_text_view2)).getText()+"";
+                bleManager.setDescriptors(characteristicUuid);
+                mainActivity.setDescriptorsAdapter();
                 return true;
             }
         };
