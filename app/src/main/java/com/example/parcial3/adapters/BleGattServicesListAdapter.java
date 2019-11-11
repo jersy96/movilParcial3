@@ -36,8 +36,11 @@ public class BleGattServicesListAdapter extends ArrayAdapter<BluetoothGattServic
 
         View rowView= inflater.inflate(R.layout.service_list_item, null, true);
 
+        String serviceType = getServiceType(services.get(position));
+        setTextToTextView(rowView, R.id.service_list_item_text_view, serviceType);
+
         String serviceUuid = services.get(position).getUuid().toString();
-        setTextToTextView(rowView, R.id.service_list_item_text_view, serviceUuid);
+        setTextToTextView(rowView, R.id.service_list_item_text_view2, serviceUuid);
 
         return rowView;
     }
@@ -45,5 +48,16 @@ public class BleGattServicesListAdapter extends ArrayAdapter<BluetoothGattServic
     private void setTextToTextView(View rowView, int textViewId, String text){
         TextView txtView = (TextView) rowView.findViewById(textViewId);
         txtView.setText(text);
+    }
+
+    private String getServiceType(BluetoothGattService service){
+        switch (service.getType()){
+            case BluetoothGattService.SERVICE_TYPE_PRIMARY:
+                return "primary";
+            case BluetoothGattService.SERVICE_TYPE_SECONDARY:
+                return "secondary";
+            default:
+                return "unknown service type";
+        }
     }
 }
