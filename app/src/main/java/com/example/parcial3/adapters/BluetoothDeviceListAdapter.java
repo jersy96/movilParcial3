@@ -51,6 +51,7 @@ public class BluetoothDeviceListAdapter extends ArrayAdapter<ScanResult> {
             public boolean onLongClick(View view) {
                 String address=((TextView) view.findViewById(R.id.device_list_item_text_view)).getText()+"";
                 bleManager.connectToGattServer(address);
+                mainActivity.setServicesAdapter();
                 return true;
             }
         });

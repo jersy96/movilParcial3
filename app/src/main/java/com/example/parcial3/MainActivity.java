@@ -7,19 +7,21 @@ import com.example.parcial3.adapters.BluetoothDeviceListAdapter;
 import com.example.parcial3.ble.BleManager;
 import com.example.parcial3.ble.BleManagerCallerInterface;
 import com.example.parcial3.logs.Logger;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity implements BleManagerCallerInterface {
+    private final static int DEVICES_ADAPTER = 1;
+    private final static int SERVICES_ADAPTER = 2;
+
     public BleManager bleManager;
     private MainActivity mainActivity;
+    private int currentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +29,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bleManager.scanDevices();
-            }
-        });
+        currentAdapter = DEVICES_ADAPTER;
         mainActivity = this;
         instantiateBleManager();
         detectIfBleIsSupported();
@@ -56,8 +51,14 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id){
+            case R.id.action_show_devices:
+                setDevicesAdapter();
+                bleManager.scanDevices();
+                return true;
+            case R.id.action_show_services:
+                setServicesAdapter();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -108,19 +109,9 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
 
     @Override
     public void newDeviceDetected() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            try{
-                ListView listView=(ListView)findViewById(R.id.devices_list_id);
-                BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(), bleManager, mainActivity);
-                listView.setAdapter(adapter);
-
-            }catch (Exception error){
-
-            }
-            }
-        });
+        if (currentAdapter == DEVICES_ADAPTER){
+            setDevicesAdapter();
+        }
     }
 
     @Override
@@ -135,6 +126,30 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
 
     @Override
     public void servicesDiscovered() {
+        if (currentAdapter == SERVICES_ADAPTER){
+            setServicesAdapter();
+        }
+    }
+
+    private void setDevicesAdapter(){
+        currentAdapter = DEVICES_ADAPTER;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
+                    BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(), bleManager, mainActivity);
+                    listView.setAdapter(adapter);
+
+                }catch (Exception error){
+
+                }
+            }
+        });
+    }
+
+    public void setServicesAdapter(){
+        currentAdapter = SERVICES_ADAPTER;
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

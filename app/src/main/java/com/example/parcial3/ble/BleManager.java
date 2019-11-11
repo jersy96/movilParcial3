@@ -48,6 +48,7 @@ public class BleManager extends ScanCallback {
             bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
             bluetoothAdapter = bluetoothManager.getAdapter();
             scanResults = new ArrayList();
+            services = new ArrayList();
         }catch (Exception error){
 
         }
