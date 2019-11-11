@@ -169,7 +169,7 @@ public class BleManager extends ScanCallback {
 
     private void processNewScanResult(ScanResult newScanResult){
         String newAddress = newScanResult.getDevice().getAddress();
-        int pos = getPositionByAddress(newAddress);
+        int pos = getDevicePositionByAddress(newAddress);
         if (pos == -1){
             scanResults.add(newScanResult);
         } else {
@@ -177,7 +177,7 @@ public class BleManager extends ScanCallback {
         }
     }
 
-    public int getPositionByAddress(String targetAddress){
+    public int getDevicePositionByAddress(String targetAddress){
         for (int i=0; i < scanResults.size(); i++){
             ScanResult  current = scanResults.get(i);
             if(current.getDevice().getAddress().equals(targetAddress)){
@@ -187,8 +187,8 @@ public class BleManager extends ScanCallback {
         return -1;
     }
 
-    public BluetoothDevice getByAddress(String targetAddress){
-        int pos = getPositionByAddress(targetAddress);
+    public BluetoothDevice getDeviceByAddress(String targetAddress){
+        int pos = getDevicePositionByAddress(targetAddress);
         if(pos == -1){
             return null;
         } else {
@@ -198,7 +198,7 @@ public class BleManager extends ScanCallback {
     }
 
     public void connectToGattServer(String targetAddress){
-        BluetoothDevice device = getByAddress(targetAddress);
+        BluetoothDevice device = getDeviceByAddress(targetAddress);
         try{
             device.connectGatt(this.context, false, new BluetoothGattCallback() {
                 @Override
