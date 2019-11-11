@@ -34,6 +34,7 @@ public class BleManager extends ScanCallback {
     private BluetoothLeScanner bluetoothLeScanner;
     public List<ScanResult> scanResults;
     public ArrayList<BluetoothGattService> services;
+    public ArrayList<BluetoothGattCharacteristic> characteristics;
     BleManagerCallerInterface caller;
 
     public BleManager(Context context, BleManagerCallerInterface caller) {
@@ -49,6 +50,7 @@ public class BleManager extends ScanCallback {
             bluetoothAdapter = bluetoothManager.getAdapter();
             scanResults = new ArrayList();
             services = new ArrayList();
+            characteristics = new ArrayList();
         }catch (Exception error){
 
         }
@@ -270,5 +272,30 @@ public class BleManager extends ScanCallback {
         }catch (Exception error){
 
         }
+    }
+
+    public int getServicePositionByUuid(String targetUuid){
+        for (int i=0; i < services.size(); i++){
+            BluetoothGattService current = services.get(i);
+            if(current.getUuid().toString().equals(targetUuid)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public BluetoothGattService getServiceByUuid(String targetUuid){
+        int pos = getServicePositionByUuid(targetUuid);
+        if(pos == -1){
+            return null;
+        } else {
+            return services.get(pos);
+        }
+
+    }
+
+    public void setCharacteristics(String serviceUuid){
+        BluetoothGattService service = getServiceByUuid(serviceUuid);
+        characteristics = (ArrayList) service.getCharacteristics();
     }
 }

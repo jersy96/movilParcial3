@@ -42,11 +42,14 @@ public class BleGattServicesListAdapter extends ArrayAdapter<BluetoothGattServic
         String serviceUuid = services.get(position).getUuid().toString();
         setTextToTextView(rowView, R.id.service_list_item_text_view2, serviceUuid);
 
+        setOnLongClickListenerToTextView(rowView, R.id.service_list_item_text_view);
+        setOnLongClickListenerToTextView(rowView, R.id.service_list_item_text_view2);
+
         return rowView;
     }
 
     private void setTextToTextView(View rowView, int textViewId, String text){
-        TextView txtView = (TextView) rowView.findViewById(textViewId);
+        TextView txtView = rowView.findViewById(textViewId);
         txtView.setText(text);
     }
 
@@ -59,5 +62,21 @@ public class BleGattServicesListAdapter extends ArrayAdapter<BluetoothGattServic
             default:
                 return "unknown service type";
         }
+    }
+
+    private void setOnLongClickListenerToTextView(View rowView, int textViewId){
+        rowView.findViewById(textViewId).setOnLongClickListener(getOnLongClickListener());
+    }
+
+    private View.OnLongClickListener getOnLongClickListener(){
+        return new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String serviceUuid = ((TextView) ((View)view.getParent()).findViewById(R.id.service_list_item_text_view2)).getText()+"";
+                bleManager.setCharacteristics(serviceUuid);
+                mainActivity.setCharacteristicsAdapter();
+                return true;
+            }
+        };
     }
 }

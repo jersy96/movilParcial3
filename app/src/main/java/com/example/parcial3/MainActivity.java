@@ -2,6 +2,7 @@ package com.example.parcial3;
 
 import android.os.Bundle;
 
+import com.example.parcial3.adapters.BleGattCharacteristicsListAdapter;
 import com.example.parcial3.adapters.BleGattServicesListAdapter;
 import com.example.parcial3.adapters.BluetoothDeviceListAdapter;
 import com.example.parcial3.ble.BleManager;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 public class MainActivity extends AppCompatActivity implements BleManagerCallerInterface {
     private final static int DEVICES_ADAPTER = 1;
     private final static int SERVICES_ADAPTER = 2;
+    private final static int CHARACTERISTICS_ADAPTER = 3;
 
     public BleManager bleManager;
     private MainActivity mainActivity;
@@ -81,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 return true;
             case R.id.action_show_services:
                 setServicesAdapter();
+                return true;
+            case R.id.action_show_characteristics:
+                setCharacteristicsAdapter();
                 return true;
         }
 
@@ -160,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             @Override
             public void run() {
                 try{
-                    ListView listView=(ListView)findViewById(R.id.devices_list_id);
+                    ListView listView=(ListView)findViewById(R.id.adapters_list_id);
                     BluetoothDeviceListAdapter adapter=new BluetoothDeviceListAdapter(getApplicationContext(), bleManager, mainActivity);
                     listView.setAdapter(adapter);
 
@@ -176,8 +181,20 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ListView listView=(ListView)findViewById(R.id.devices_list_id);
+                ListView listView=findViewById(R.id.adapters_list_id);
                 BleGattServicesListAdapter adapter=new BleGattServicesListAdapter(getApplicationContext(), bleManager, mainActivity);
+                listView.setAdapter(adapter);
+            }
+        });
+    }
+
+    public void setCharacteristicsAdapter(){
+        currentAdapter = CHARACTERISTICS_ADAPTER;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ListView listView=findViewById(R.id.adapters_list_id);
+                BleGattCharacteristicsListAdapter adapter=new BleGattCharacteristicsListAdapter(getApplicationContext(), bleManager, mainActivity);
                 listView.setAdapter(adapter);
             }
         });
@@ -190,6 +207,9 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 break;
             case SERVICES_ADAPTER:
                 setServicesAdapter();
+                break;
+            case CHARACTERISTICS_ADAPTER:
+                setCharacteristicsAdapter();
                 break;
         }
     }
