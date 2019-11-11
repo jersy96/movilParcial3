@@ -68,18 +68,24 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         //noinspection SimplifiableIfStatement
         switch (id){
             case R.id.action_start_scan:
-                if (!scanning){
+                if (scanning){
+                    Logger.shortToast(this, "Already scanning");
+                } else {
                     bleManager.scanDevices();
                     scanning = true;
                     setDevicesAdapter();
-                } else {
-                    Logger.shortToast(this, "Ya estas escaneando");
+                    Logger.shortToast(this, "Scan started");
                 }
                 return true;
             case R.id.action_stop_scan:
-                scanning = false;
-                bleManager.stopScan();
-                setDevicesAdapter();
+                if (scanning){
+                    scanning = false;
+                    bleManager.stopScan();
+                    Logger.shortToast(this, "Scan stopped");
+                    setDevicesAdapter();
+                } else {
+                    Logger.shortToast(this, "Not scanning");
+                }
                 return true;
             case R.id.action_show_devices:
                 setDevicesAdapter();
@@ -118,11 +124,11 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
     }
 
     private void handleBleSupported(){
-        Logger.shortToast(this, "Su dispositivo SI soporta BLE");
+        Logger.shortToast(this, "Your device support BLE");
     }
 
     private void handleBleNotSupported(){
-        Logger.shortToast(this, "Su dispositivo NO soporta BLE");
+        Logger.shortToast(this, "Your device does NOT support BLE");
     }
 
     private void detectIfBluetoothIsEnabled(){
@@ -159,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Logger.shortToast(getApplicationContext(), "conectado");
+                Logger.shortToast(getApplicationContext(), "Connected to Gatt, discovering services..");
             }
         });
     }
