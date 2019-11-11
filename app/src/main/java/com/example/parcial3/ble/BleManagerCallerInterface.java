@@ -1,5 +1,7 @@
 package com.example.parcial3.ble;
 
+import android.bluetooth.BluetoothGattCharacteristic;
+
 public interface BleManagerCallerInterface {
 
     void scanStartedSuccessfully();
@@ -8,5 +10,6 @@ public interface BleManagerCallerInterface {
     void newDeviceDetected();
     void connectedToGattServer();
     void servicesDiscovered();
+    void onCharacteristicChanged(BluetoothGattCharacteristic characteristic);
 
 }

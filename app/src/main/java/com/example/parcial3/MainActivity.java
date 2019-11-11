@@ -1,5 +1,6 @@
 package com.example.parcial3;
 
+import android.bluetooth.BluetoothGattCharacteristic;
 import android.os.Bundle;
 
 import com.example.parcial3.adapters.BleGattCharacteristicsListAdapter;
@@ -162,6 +163,16 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         if (currentAdapter == SERVICES_ADAPTER){
             setServicesAdapter();
         }
+    }
+
+    @Override
+    public void onCharacteristicChanged(final BluetoothGattCharacteristic characteristic) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Logger.shortToast(getApplicationContext(), "characteristic changed"+characteristic.getUuid().toString());
+            }
+        });
     }
 
     private void setDevicesAdapter(){

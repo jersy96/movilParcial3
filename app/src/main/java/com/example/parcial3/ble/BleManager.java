@@ -36,6 +36,7 @@ public class BleManager extends ScanCallback {
     public ArrayList<BluetoothGattService> services;
     public ArrayList<BluetoothGattCharacteristic> characteristics;
     public ArrayList<BluetoothGattDescriptor> descriptors;
+    private BluetoothGatt lastGatt;
     BleManagerCallerInterface caller;
 
     public BleManager(Context context, BleManagerCallerInterface caller) {
@@ -153,6 +154,7 @@ public class BleManager extends ScanCallback {
         this.scanResults.clear();
         this.services.clear();
         bluetoothLeScanner.stopScan(this);
+        caller.scanStoped();
     }
 
     @Override
@@ -219,6 +221,7 @@ public class BleManager extends ScanCallback {
                 public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
                     super.onConnectionStateChange(gatt, status, newState);
                     if(newState==BluetoothGatt.STATE_CONNECTED){
+                        lastGatt = gatt;
                         caller.connectedToGattServer();
                         gatt.discoverServices();
                     }
@@ -245,6 +248,7 @@ public class BleManager extends ScanCallback {
                 @Override
                 public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
                     super.onCharacteristicChanged(gatt, characteristic);
+                    caller.onCharacteristicChanged(characteristic);
                 }
 
                 @Override
@@ -330,17 +334,17 @@ public class BleManager extends ScanCallback {
     private void searchAndSetAllNotifyAbleCharacteristics(BluetoothGatt gatt) {
         for(BluetoothGattService currentService: services){
             for(BluetoothGattCharacteristic currentCharacteristic:currentService.getCharacteristics()){
-                enableNotifiableCharacteristic(gatt, currentCharacteristic);
+                enableNotifiableCharacteristic(currentCharacteristic);
             }
         }
     }
 
-    private void enableNotifiableCharacteristic(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic){
+    private void enableNotifiableCharacteristic(BluetoothGattCharacteristic characteristic){
         if(isCharacteristicNotifiable(characteristic)){
-            gatt.setCharacteristicNotification(characteristic, true);
+            lastGatt.setCharacteristicNotification(characteristic, true);
             for(BluetoothGattDescriptor currentDescriptor:characteristic.getDescriptors()){
                 currentDescriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-                gatt.writeDescriptor(currentDescriptor);
+                lastGatt.writeDescriptor(currentDescriptor);
             }
 
         }
