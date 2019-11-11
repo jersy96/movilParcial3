@@ -92,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 return true;
             case R.id.action_show_descriptors:
                 setDescriptorsAdapter();
+            case R.id.action_read_last_characteristic:
+                readLastCharacteristic();
+            case R.id.action_write_last_characteristic:
+                writeLastCharacteristic();
                 return true;
         }
 
@@ -242,6 +246,19 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             case DESCRIPTORS_ADAPTER:
                 setDescriptorsAdapter();
                 break;
+        }
+    }
+
+    private void readLastCharacteristic(){
+        if (!bleManager.readLastCharacteristic()){
+            Logger.shortToast(this, "characteristic not set");
+        }
+    }
+
+    private void writeLastCharacteristic(){
+        byte[] data = "hola".getBytes();
+        if (!bleManager.writeLastCharacteristic(data)){
+            Logger.shortToast(this, "characteristic not set");
         }
     }
 }

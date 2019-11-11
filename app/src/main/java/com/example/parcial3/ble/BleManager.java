@@ -37,6 +37,7 @@ public class BleManager extends ScanCallback {
     public ArrayList<BluetoothGattCharacteristic> characteristics;
     public ArrayList<BluetoothGattDescriptor> descriptors;
     private BluetoothGatt lastGatt;
+    public BluetoothGattCharacteristic lastCharacteristic;
     BleManagerCallerInterface caller;
 
     public BleManager(Context context, BleManagerCallerInterface caller) {
@@ -328,6 +329,7 @@ public class BleManager extends ScanCallback {
 
     public void setDescriptors(String characteristicUuid){
         BluetoothGattCharacteristic characteristic = getCharacteristicByUuid(characteristicUuid);
+        lastCharacteristic = characteristic;
         descriptors = (ArrayList) characteristic.getDescriptors();
     }
 
@@ -375,5 +377,32 @@ public class BleManager extends ScanCallback {
 
     public boolean isCharacteristicBroadcastable(BluetoothGattCharacteristic characteristic) {
         return ((characteristic.getProperties() & BluetoothGattCharacteristic.PROPERTY_BROADCAST) != 0);
+    }
+
+    public boolean readLastCharacteristic(){
+        if(lastCharacteristic == null){
+            return false;
+        } else {
+            readCharacteristic(lastGatt, lastCharacteristic);
+            return true;
+        }
+    }
+
+    public boolean writeLastCharacteristic(byte[] data){
+        if(lastCharacteristic == null){
+            return false;
+        } else {
+            writeCharacteristic(lastGatt, lastCharacteristic, data);
+            return true;
+        }
+    }
+
+    private boolean readCharacteristic(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic){
+        return gatt.readCharacteristic(characteristic);
+    }
+
+    public boolean writeCharacteristic(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, byte[] data){
+        characteristic.setValue(data);
+        return gatt.writeCharacteristic(characteristic);
     }
 }

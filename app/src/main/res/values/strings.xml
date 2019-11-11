@@ -6,4 +6,6 @@
     <string name="action_show_services">Show Services</string>
     <string name="action_show_characteristics">Show Characteristics</string>
     <string name="action_show_descriptors">Show Descriptors</string>
+    <string name="action_read_last_characteristic">Read Last Characteristic</string>
+    <string name="action_write_last_characteristic">Write Last Characteristic</string>
 </resources>

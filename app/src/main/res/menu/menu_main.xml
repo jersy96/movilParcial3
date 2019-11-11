@@ -34,5 +34,15 @@
             android:orderInCategory="100"
             android:title="@string/action_show_descriptors"
             app:showAsAction="never" />
+        <item
+            android:id="@+id/action_read_last_characteristic"
+            android:orderInCategory="100"
+            android:title="@string/action_read_last_characteristic"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/action_write_last_characteristic"
+            android:orderInCategory="100"
+            android:title="@string/action_write_last_characteristic"
+            app:showAsAction="never" />
     </group>
 </menu>
