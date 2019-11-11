@@ -105,6 +105,11 @@ public class BleGattCharacteristicsListAdapter extends ArrayAdapter<BluetoothGat
     }
 
     private boolean isCharacteristicLastOne(BluetoothGattCharacteristic characteristic){
-        return  bleManager.lastCharacteristic.getUuid().toString().equals(characteristic.getUuid().toString());
+        BluetoothGattCharacteristic lastCharacteristic = bleManager.lastCharacteristic;
+        if (lastCharacteristic == null){
+            return false;
+        } else {
+            return lastCharacteristic.getUuid().toString().equals(characteristic.getUuid().toString());
+        }
     }
 }
