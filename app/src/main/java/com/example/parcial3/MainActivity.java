@@ -1,6 +1,7 @@
 package com.example.parcial3;
 
 import android.bluetooth.BluetoothGattCharacteristic;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import com.example.parcial3.adapters.BleGattCharacteristicsListAdapter;
@@ -14,9 +15,11 @@ import com.example.parcial3.logs.Logger;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity implements BleManagerCallerInterface {
@@ -209,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             @Override
             public void run() {
                 int pos = bleManager.getCharacteristicPositionByUuid(characteristic.getUuid().toString());
-                Logger.shortToast(getApplicationContext(), "characteristic write "+(pos+1)+", "+characteristic.getStringValue(100));
+                Logger.shortToast(getApplicationContext(), "characteristic write "+(pos+1));
             }
         });
     }
@@ -297,16 +300,23 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
     }
 
     private void writeLastCharacteristic(){
-        byte[] data = "hola".getBytes();
-        int result = bleManager.writeLastCharacteristic(data);
-        switch (result){
-            case BleManager.CHARACTERISTIC_OPERATION_NULL:
-                Logger.shortToast(this, "characteristic not set");
-                break;
-            case BleManager.CHARACTERISTIC_OPERATION_UNAVAILABLE:
-                Logger.shortToast(this, "characteristic not writable");
-                break;
-        }
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        Logger.showTextInputDialog(this, "Write to characteristic", "Write", input, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                String text = input.getText().toString();
+                byte[] data = text.getBytes();
+                int result = bleManager.writeLastCharacteristic(data);
+                switch (result){
+                    case BleManager.CHARACTERISTIC_OPERATION_NULL:
+                        Logger.shortToast(mainActivity, "characteristic not set");
+                        break;
+                    case BleManager.CHARACTERISTIC_OPERATION_UNAVAILABLE:
+                        Logger.shortToast(mainActivity, "characteristic not writable");
+                        break;
+                }
+            }
+        });
     }
 
     private String byteArrayToHexString(final byte[] data) {
