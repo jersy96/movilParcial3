@@ -183,8 +183,11 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             @Override
             public void run() {
                 int pos = bleManager.getCharacteristicPositionByUuid(characteristic.getUuid().toString());
-                String hexString = byteArrayToHexString(characteristic.getValue());
-                Logger.showAlert(mainActivity, "Characteristic "+(pos+1)+" change", hexString);
+                byte[] bytes = characteristic.getValue();
+                String s = new String(bytes);
+                String hexString = byteArrayToHexString(bytes);
+                String message = "String = "+s+"\n"+"HexString = "+hexString;
+                Logger.showAlert(mainActivity, "Characteristic "+(pos+1)+" change", message);
             }
         });
     }
