@@ -183,7 +183,8 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             @Override
             public void run() {
                 int pos = bleManager.getCharacteristicPositionByUuid(characteristic.getUuid().toString());
-                Logger.shortToast(getApplicationContext(), "characteristic changed "+(pos+1));
+                String hexString = byteArrayToHexString(characteristic.getValue());
+                Logger.shortToast(getApplicationContext(), hexString);
             }
         });
     }
@@ -205,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             @Override
             public void run() {
                 int pos = bleManager.getCharacteristicPositionByUuid(characteristic.getUuid().toString());
-                Logger.shortToast(getApplicationContext(), "characteristic write "+(pos+1));
+                Logger.shortToast(getApplicationContext(), "characteristic write "+(pos+1)+", "+characteristic.getStringValue(100));
             }
         });
     }
@@ -303,5 +304,16 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
                 Logger.shortToast(this, "characteristic not writable");
                 break;
         }
+    }
+
+    private String byteArrayToHexString(final byte[] data) {
+        String hexString = "";
+        if (data != null && data.length > 0) {
+            final StringBuilder stringBuilder = new StringBuilder(data.length);
+            for (byte byteChar : data)
+                stringBuilder.append(String.format("%02X ", byteChar));
+            hexString = stringBuilder.toString();
+        }
+        return hexString;
     }
 }
