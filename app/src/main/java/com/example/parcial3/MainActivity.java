@@ -207,12 +207,12 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
     }
 
     @Override
-    public void onCharacteristicWrite(final BluetoothGattCharacteristic characteristic) {
+    public void onCharacteristicWrite(final BluetoothGattCharacteristic characteristic, final int status) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 int pos = bleManager.getCharacteristicPositionByUuid(characteristic.getUuid().toString());
-                Logger.shortToast(getApplicationContext(), "characteristic write "+(pos+1));
+                Logger.shortToast(getApplicationContext(), "characteristic write "+(pos+1)+", status: "+status);
             }
         });
     }
