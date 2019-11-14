@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
         Logger.showTextInputDialog(this, "Write to characteristic", "Write", input, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 String text = input.getText().toString();
-                byte[] data = text.getBytes();
+                byte[] data = hexStringToByteArray(text);
                 int result = bleManager.writeLastCharacteristic(data);
                 switch (result){
                     case BleManager.CHARACTERISTIC_OPERATION_NULL:
@@ -328,5 +328,21 @@ public class MainActivity extends AppCompatActivity implements BleManagerCallerI
             hexString = stringBuilder.toString();
         }
         return hexString;
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        if((s.length()%2)==1){
+            s="0"+s;
+        }
+        int len = s.length();
+        if(len==1){
+            return new byte[]{Byte.parseByte(s,16)};
+        }
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2){
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1),16));
+        }
+        return data;
     }
 }
